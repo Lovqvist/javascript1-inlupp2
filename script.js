@@ -2,18 +2,18 @@ const todoInput = document.querySelector('#todo-input');
 const todoOutput = document.querySelector('#todos-output');
 const regTodo = document.querySelector('#reg-todo')
 
-// Laddar upp 10 st todos till sidan
+
 
 let todos = [];
 
-
+// Laddar upp 10 st todos till sidan
 
 const todoPosts = async () => {
     let url = 'https://jsonplaceholder.typicode.com/todos?_limit=10'
 
     const res = await fetch(url);
     todos = await res.json();
-    console.log(todos)
+    // console.log(todos)
     
     listTodos();
 }
@@ -25,50 +25,42 @@ const listTodos = () => {
     todos.forEach( post => { 
     
     postTodo(post);
+    // console.log(post.completed)
     })
 }
 
 const postTodo = (todo) =>  {
 
     let card = document.createElement('div');
-    
-    card.addEventListener('click', () => {
-        fetch(`https://jsonplaceholder.typicode.com/todos/${todo.id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-        completed: true
-    }),
-        headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-    },
-    })
-    .then(res => res.json())
-    .then(data =>  {
-        todos(data)
-        card.classList.add('checked')
-    })
-        
-        
-    })
-    if(todo.completed){
+    const checkCompleted = () => {
+        if(todo.completed){
         card.classList.add('checked', 'todo-list', 'pt-1', 'pb-1', 'border', 'rounded', 'bg-white', 'd-flex', 'justify-content-between', 'align-items-center');
         } else {
             card.classList.add('todo-list', 'pt-1', 'pb-1', 'border', 'rounded', 'bg-white', 'd-flex', 'justify-content-between', 'align-items-center');
-        }
-   
+        }}
+    card.addEventListener('click', () => {
+        // console.log(todo)
+        
+        if(todo.completed){
+           todo.completed = false;
+        //    console.log(todos)
+           card.classList.remove('checked')
+       }else {
+           todo.completed = true;
+        //    console.log(todos)
+           card.classList.add('checked')
+       }
+       return todos
+    })
+    
+   checkCompleted(todos)
 
     let titel = document.createElement('h5');
     titel.classList.add('px-2', 'm-0');
-    titel.innerText = todo.title;
-
+    titel.innerText = todo.title.charAt(0).toUpperCase() + todo.title.slice(1);  // Gör första bokstaven till stor bokstav
+      
     let button = document.createElement('button');
     button.classList.add('btn', 'btn-delete');
-    button.addEventListener('click', () =>{
-        fetch('https://jsonplaceholder.typicode.com/posts/1', {
-            method: 'DELETE',
-          });
-})
-
     
     let symbol = document.createElement('i');
     symbol.classList.add('fas', 'fa-minus')
@@ -126,30 +118,6 @@ const createTodo = (title) => {
 }
 
 
-// Ändra todo.completed
-
-// const completUpdate = (todoid) => { 
-//     fetch(`https://jsonplaceholder.typicode.com/todos/${todoid}`, {
-//         method: 'PUT',
-//         body: JSON.stringify({
-//         completed: true
-//     }),
-//         headers: {
-//         'Content-type': 'application/json; charset=UTF-8',
-//     },
-//     })
-//     .then(res => res.json())
-//     .then(data => { 
-//         console.log(data)
-
-//         todos(data);
-//     })
-// }
-
-
-
-
-
 
 regTodo.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -160,12 +128,5 @@ regTodo.addEventListener('submit', (e) => {
     regTodo.reset();
     }
     
-    
-
-    
-
-
-
-
 })
 
