@@ -13,7 +13,7 @@ const todoPosts = async () => {
 
     const res = await fetch(url);
     todos = await res.json();
-    // console.log(todos)
+    console.log(todos)
     
     listTodos();
 }
@@ -57,10 +57,17 @@ const postTodo = (todo) =>  {
 
     let titel = document.createElement('h5');
     titel.classList.add('px-2', 'm-0');
-    titel.innerText = todo.title.charAt(0).toUpperCase() + todo.title.slice(1);  // Gör första bokstaven till stor bokstav
+    titel.innerText = todo.title.charAt(0).toUpperCase() + todo.title.slice(1).toLowerCase();  // Gör första bokstaven till stor bokstav och resterande små
       
     let button = document.createElement('button');
     button.classList.add('btn', 'btn-delete');
+
+    button.addEventListener('click', () => {
+        let deleteIndex = todo.id
+        
+        deleteTodo(todos.findIndex(todo => todo.id === deleteIndex))
+        
+    })
     
     let symbol = document.createElement('i');
     symbol.classList.add('fas', 'fa-minus')
@@ -117,6 +124,14 @@ const createTodo = (title) => {
     })
 }
 
+// Ta bort todo
+
+const deleteTodo = (todo) => {
+    todos.splice(todo, 1);
+    listTodos();
+    console.log(todo);
+  
+}
 
 
 regTodo.addEventListener('submit', (e) => {
